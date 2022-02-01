@@ -21,22 +21,19 @@ export const RequestAirdrop: FC = () => {
         try {
             signature = await connection.requestAirdrop(publicKey, LAMPORTS_PER_SOL);
             await connection.confirmTransaction(signature, 'confirmed');
-
             notify({ type: 'success', message: 'Airdrop successful!', txid: signature });
-            // !debug: console.log('success', 'Airdrop successful!', signature);
 
             getUserSOLBalance(publicKey, connection);
         } catch (error: any) {
-            notify({ type: 'error', message: `Airdrop failed! ${error?.message}`, txid: signature });
+            notify({ type: 'error', message: `Airdrop failed!`, description: error?.message, txid: signature });
             console.log('error', `Airdrop failed! ${error?.message}`, signature);
         }
     }, [publicKey, connection, getUserSOLBalance]);
 
     return (
         <div>
-
             <button
-                className="btn animate-pulse m-2 bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
+                className="px-8 m-2 btn animate-pulse bg-gradient-to-r from-[#9945FF] to-[#14F195] hover:from-pink-500 hover:to-yellow-500 ..."
                 onClick={onClick}
             >
                 <span>Airdrop 1 </span>
