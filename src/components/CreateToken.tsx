@@ -1,20 +1,14 @@
-import { useConnection, useWallet, WalletProvider } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet} from '@solana/wallet-adapter-react';
 import { Keypair, SystemProgram, Transaction, TransactionSignature, LAMPORTS_PER_SOL, sendAndConfirmTransaction } from '@solana/web3.js';
 import { FC, useCallback } from 'react';
 import { notify } from "../utils/notifications";
-
-import {
-    NATIVE_MINT,
-    Token,
-    TOKEN_PROGRAM_ID,
-} from "@solana/spl-token";
-
-
-
+import { Token, TOKEN_PROGRAM_ID} from "@solana/spl-token";
+import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 
 export const CreateToken: FC = () => {
     const { connection } = useConnection();
     const { publicKey, sendTransaction } = useWallet();
+    const { getUserSOLBalance } = useUserSOLBalanceStore();
 
     const onClick = useCallback(async () => {
         if (!publicKey) {
@@ -29,35 +23,65 @@ export const CreateToken: FC = () => {
         console.log(kp.publicKey);
         console.log(kp.secretKey);
 
-        signature = await connection.requestAirdrop(kp.publicKey, LAMPORTS_PER_SOL);
-        await connection.confirmTransaction(signature, 'confirmed');
+        try {
+            const transaction = new Transaction().add(
+                SystemProgram.transfer({
+                    fromPubkey: publicKey,
+                    toPubkey: kp.publicKey,
+                    lamports: LAMPORTS_PER_SOL/100,
+                })
+            );
+
+            signature = await sendTransaction(transaction, connection);
+
+            await connection.confirmTransaction(signature, 'confirmed');
+            notify({ type: 'success', message: 'Transaction successful!', txid: signature });
+        } catch (error: any) {
+            notify({ type: 'error', message: `Transaction failed!`, description: error?.message, txid: signature });
+            console.log('error', `Transaction failed! ${error?.message}`, signature);
+            return;
+        }
 
         const mintRequester = publicKey;
         const mintingFromWallet = kp;
 
-        const creatorToken = await Token.createMint(connection, mintingFromWallet, mintingFromWallet.publicKey, null, 6, TOKEN_PROGRAM_ID);
-        console.log(creatorToken);
-        const fromTokenAccount = await creatorToken.getOrCreateAssociatedAccountInfo(mintingFromWallet.publicKey);
-        console.log(fromTokenAccount);
-        const mintToResult = await creatorToken.mintTo(fromTokenAccount.address, mintingFromWallet.publicKey, [], 1000000);
-        console.log(mintToResult);
+        try {
+            const startBalance = getUserSOLBalance(kp.publicKey, connection);
+            console.log('start balance: ');
+            console.log(startBalance);
 
-        const toTokenAccount = await creatorToken.getOrCreateAssociatedAccountInfo(mintRequester);
-        const transaction = new Transaction().add(
-            Token.createTransferInstruction(
-                TOKEN_PROGRAM_ID,
-                fromTokenAccount.address,
-                toTokenAccount.address,
-                mintingFromWallet.publicKey,
-                [],
-                1000000
-            )
-        );
+            const creatorToken = await Token.createMint(connection, mintingFromWallet, mintingFromWallet.publicKey, null, 6, TOKEN_PROGRAM_ID);
+            console.log(creatorToken);
+            const fromTokenAccount = await creatorToken.getOrCreateAssociatedAccountInfo(mintingFromWallet.publicKey);
+            console.log(fromTokenAccount);
+            const mintToResult = await creatorToken.mintTo(fromTokenAccount.address, mintingFromWallet.publicKey, [], 1000000);
+            console.log(mintToResult);
 
-        signature = await sendAndConfirmTransaction(connection, transaction, [mintingFromWallet], { commitment: "confirmed" });
+            const toTokenAccount = await creatorToken.getOrCreateAssociatedAccountInfo(mintRequester);
+            const transaction = new Transaction().add(
+                Token.createTransferInstruction(
+                    TOKEN_PROGRAM_ID,
+                    fromTokenAccount.address,
+                    toTokenAccount.address,
+                    mintingFromWallet.publicKey,
+                    [],
+                    1000000
+                )
+            );
 
-        console.log(signature);
+            signature = await sendAndConfirmTransaction(connection, transaction, [mintingFromWallet], { commitment: "confirmed" });
 
+            console.log(signature);
+
+            const endBalance = getUserSOLBalance(kp.publicKey, connection);
+            console.log('end balance: ');
+            console.log(endBalance);
+            notify({ type: 'success', message: 'Token created successful!', txid: signature });
+        } catch (error: any) {
+            notify({ type: 'error', message: `Token creation failed!`, description: error?.message, txid: signature });
+            console.log('error', `Token creation failed! ${error?.message}`, signature);
+            return;
+        }
 
     }, [publicKey, notify, connection, sendTransaction]);
 
