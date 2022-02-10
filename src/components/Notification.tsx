@@ -14,20 +14,6 @@ const NotificationList = () => {
     (s) => s
   )
 
-  useEffect(() => {
-    if (notifications.length > 0) {
-      const id = setInterval(() => {
-        setNotificationStore((state: any) => {
-          state.notifications = notifications.slice(1, notifications.length)
-        })
-      }, 8000)
-
-      return () => {
-        clearInterval(id)
-      }
-    }
-  }, [notifications, setNotificationStore])
-
   const reversedNotifications = [...notifications].reverse()
 
   return (
@@ -64,6 +50,17 @@ const Notification = ({ type, message, description, txid, onHide }) => {
   // TODO: we dont have access to the network or endpoint here.. 
   // getExplorerUrl(connection., txid, 'tx')
   // Either a provider, context, and or wallet adapter related pro/contx need updated
+
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      onHide()
+    }, 8000);
+
+    return () => {
+      clearInterval(id);
+    };
+  }, [onHide]);
 
   return (
     <div
