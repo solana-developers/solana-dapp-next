@@ -42,19 +42,24 @@ const NotificationList = () => {
             message={n.message}
             description={n.description}
             txid={n.txid}
+            onHide={() => {
+              setNotificationStore((state: any) => {
+                const reversedIndex = reversedNotifications.length - 1 - idx;
+                state.notifications = [
+                  ...notifications.slice(0, reversedIndex),
+                  ...notifications.slice(reversedIndex + 1),
+                ];
+              });
+            }}
           />
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-const Notification = ({ type, message, description, txid }) => {
+const Notification = ({ type, message, description, txid, onHide }) => {
   const { connection } = useConnection();
-
-  const [showNotification, setShowNotification] = useState(true)
-
-  if (!showNotification) return null;
 
   // TODO: we dont have access to the network or endpoint here.. 
   // getExplorerUrl(connection., txid, 'tx')
@@ -100,7 +105,7 @@ const Notification = ({ type, message, description, txid }) => {
           </div>
           <div className={`ml-4 flex-shrink-0 self-start flex`}>
             <button
-              onClick={() => setShowNotification(false)}
+              onClick={() => onHide()}
               className={`bg-bkg-2 default-transition rounded-md inline-flex text-fgd-3 hover:text-fgd-4 focus:outline-none`}
             >
               <span className={`sr-only`}>Close</span>
