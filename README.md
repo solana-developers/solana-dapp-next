@@ -79,7 +79,9 @@ style, package, configuration, and other project files
 
 ## Contributing
 
-Anyone is welcome to create an issue to build, discuss or request a new feature or update to the existing code base. Please keep in mind the following when submitting an issue. We consider merging high value features that may be utilized by the majority of scaffold users. If this is not a common feature or fix, consider adding it to the component library or cookbook. Please refer to the project's architecture and style when contributing. To Get started you can create an issue you believe may add the type of value mentioned to a general use starter scaffold used by the majority of Solana developers.
+Anyone is welcome to create an issue to build, discuss or request a new feature or update to the existing code base. Please keep in mind the following when submitting an issue. We consider merging high value features that may be utilized by the majority of scaffold users. If this is not a common feature or fix, consider adding it to the component library or cookbook. Please refer to the project's architecture and style when contributing. 
+
+If submitting a feature, please reference the project structure shown above and try to follow the overall architecture and style presented in the existing scaffold.
 
 ### Committing
 
