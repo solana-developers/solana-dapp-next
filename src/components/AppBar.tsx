@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import Link from "next/link";
 
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -6,6 +6,23 @@ import { useAutoConnect } from '../contexts/AutoConnectProvider';
 
 export const AppBar: FC = props => {
   const { autoConnect, setAutoConnect } = useAutoConnect();
+
+  const [ selectedVal, setSelectedVal ] = useState('');
+  const [ network, setNetwork ] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('network_val');
+    }
+  })
+
+  useEffect (() => {
+    localStorage.setItem('network_val', network);
+    setSelectedVal(network);
+  }, [network])
+
+  const handleChange = (e) => {
+    setNetwork(e.target.value)
+    window.location.reload();
+  }
 
   return (
     <div className="flex-none p-2">
@@ -82,6 +99,15 @@ export const AppBar: FC = props => {
                     <input type="checkbox" checked={autoConnect} onChange={(e) => setAutoConnect(e.target.checked)} className="toggle" />
                   </label>
                 </div>
+              </li>
+              <li>
+                <select id='selectList' value={selectedVal} onChange={handleChange} className="Default select example btn-ghost" name="selectList">
+                  {/* <option selected>Select</option> */}
+                  <option value="localhost">localhost</option>
+                  <option value="devnet">devnet</option>
+                  <option value="testnet">testnet</option>
+                  <option value="mainnet">mainnet</option>
+                </select>
               </li>
               <li>
                 <a>Slippage (pending)</a>
