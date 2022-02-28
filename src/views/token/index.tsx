@@ -1,5 +1,6 @@
 
 import { FC } from "react";
+import { CreateToken } from '../../components/CreateToken';
 
 export const TokenView: FC = ({ }) => {
 
@@ -10,6 +11,7 @@ export const TokenView: FC = ({ }) => {
           SPL-Token
         </h1>
         <div className="p-2">
+          <CreateToken />
           {<p>&lt; your content &gt;</p>}
         </div>
       </div>
