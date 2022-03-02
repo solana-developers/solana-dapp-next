@@ -84,8 +84,7 @@ const Notification = ({ type, message, description, txid, onHide }) => {
             ) : null}
             {txid ? (
               <div className="flex flex-row">
-
-                {/* TODO: UPDATE CLUSTER PER NETWORK */}
+         
                 <a
                   href={'https://explorer.solana.com/tx/' + txid + `?cluster=devnet`}
                   target="_blank"
