@@ -46,7 +46,7 @@ export const Footer: FC = () => {
                         </svg>
                     </a>
                 </div>
-                <div className="grid-flow-col gap-4 text-center">
+                <div className="grid-flow-col gap-4 text-center pr-2">
                     <div>
                         <p className="text-white text-base font-light cursor-default ">
                             Powered by
