@@ -11,7 +11,7 @@ Responsive                     |  Desktop
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-The responsive version for wallets and wallet adapter may not function or work as expected for mobile based on plugin and walelt compatibility.
+The responsive version for wallets and wallet adapter may not function or work as expected for mobile based on plugin and wallet compatibility.
 
 ## Installation
 
