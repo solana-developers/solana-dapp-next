@@ -1,8 +1,9 @@
-import { createContext, FC, ReactNode, useContext, useState } from 'react';
+import { useLocalStorage } from '@solana/wallet-adapter-react';
+import { createContext, FC, ReactNode, useContext } from 'react';
 
 export interface AutoConnectContextState {
     autoConnect: boolean;
-    handleAutoConnect(checked: boolean): void;
+    setAutoConnect(autoConnect: boolean): void;
 }
 
 export const AutoConnectContext = createContext<AutoConnectContextState>({} as AutoConnectContextState);
@@ -12,23 +13,12 @@ export function useAutoConnect(): AutoConnectContextState {
 }
 
 export const AutoConnectProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const [autoConnect, setAutoConnect] = useState<boolean>(() => {
-      if (typeof window !== 'undefined') {
-        const value = JSON.parse(localStorage.getItem('auto-connect'))
-  
-        if (value) return value
-      }
-
-      return false
-    });
-
-
-  const handleAutoConnect = (checked: boolean) => {
-    localStorage.setItem('auto-connect', JSON.stringify(checked))
-    setAutoConnect(checked)
-  }
+    // TODO: fix auto connect to actual reconnect on refresh/other.
+    // TODO: make switch/slider settings
+    // const [autoConnect, setAutoConnect] = useLocalStorage('autoConnect', false);
+    const [autoConnect, setAutoConnect] = useLocalStorage('autoConnect', true);
 
     return (
-        <AutoConnectContext.Provider value={{ autoConnect, handleAutoConnect }}>{children}</AutoConnectContext.Provider>
+        <AutoConnectContext.Provider value={{ autoConnect, setAutoConnect }}>{children}</AutoConnectContext.Provider>
     );
 };
