@@ -1,6 +1,9 @@
-import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider as ReactUIWalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base'
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from '@solana/wallet-adapter-react'
+import { WalletModalProvider as ReactUIWalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import {
     PhantomWalletAdapter,
     SolflareWalletAdapter,
@@ -9,16 +12,35 @@ import {
     TorusWalletAdapter,
     // LedgerWalletAdapter,
     // SlopeWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { clusterApiUrl } from '@solana/web3.js';
-import { FC, ReactNode, useCallback, useMemo } from 'react';
-import { AutoConnectProvider, useAutoConnect } from './AutoConnectProvider';
-import { notify } from "../utils/notifications";
+} from '@solana/wallet-adapter-wallets'
+import { Cluster, clusterApiUrl } from '@solana/web3.js'
+import { FC, ReactNode, useCallback, useMemo, useState } from 'react'
+import { AutoConnectProvider, useAutoConnect } from './AutoConnectProvider'
+import { notify } from '../utils/notifications'
+
+type NetworkConfig = {
+  endpoint: string
+  cluster: Cluster
+}
 
 const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
-    const { autoConnect } = useAutoConnect();
-    const network = WalletAdapterNetwork.Devnet;
-    const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const { autoConnect } = useAutoConnect()
+  const [networkConfig, setNetworkConfig] = useState<NetworkConfig>(() => {
+    if (typeof window !== 'undefined') {
+      const value = JSON.parse(
+        localStorage.getItem('network-config')
+      ) as NetworkConfig
+
+      if (value) return value
+    }
+
+    return {
+      endpoint: clusterApiUrl('devnet'),
+      cluster: 'devnet' as Cluster,
+    }
+  })
+
+  const network = networkConfig.cluster as WalletAdapterNetwork
 
     const wallets = useMemo(
         () => [
@@ -43,8 +65,12 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     return (
         // TODO: updates needed for updating and referencing endpoint: wallet adapter rework
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} onError={onError} autoConnect={autoConnect}>
+    <ConnectionProvider endpoint={networkConfig.endpoint}>
+      <WalletProvider
+        wallets={wallets}
+        onError={onError}
+        autoConnect={autoConnect}
+      >
                 <ReactUIWalletModalProvider>{children}</ReactUIWalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>
