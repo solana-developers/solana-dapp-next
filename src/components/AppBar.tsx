@@ -73,7 +73,7 @@ export const AppBar: FC = props => {
               <li>
                 <div className="form-control">
                   <label className="cursor-pointer label">
-                    <a>Autoconnect</a>
+                    <a>Auto-connect</a>
                     <input type="checkbox" checked={autoConnect} onChange={(e) => setAutoConnect(e.target.checked)} className="toggle" />
                   </label>
                 </div>
