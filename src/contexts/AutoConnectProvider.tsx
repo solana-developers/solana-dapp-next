@@ -13,11 +13,10 @@ export function useAutoConnect(): AutoConnectContextState {
 
 export const AutoConnectProvider: FC<{ children: ReactNode }> = ({ children }) => {
     const [autoConnect, setAutoConnect] = useState<boolean>(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window === 'undefined') return false
           const value = localStorage.getItem('auto-connect')
     
-          return JSON.parse(value)
-        }
+          return value ? JSON.parse(value) : false
     });
 
     useEffect(() => {
