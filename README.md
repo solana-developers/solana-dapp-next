@@ -1,6 +1,11 @@
 
 # Solana dApp Scaffold Next
 
+# Note this version is not currently maintained. 
+## Please use the newer version: [Solana Dapp Scaffold](https://github.com/solana-labs/dapp-scaffold/)
+
+## Older version notes:
+
 The Solana dApp Scaffold repos are meant to house good starting scaffolds for ecosystem developers to get up and running quickly with a front end client UI that integrates several common features found in dApps with some basic usage examples. Wallet Integration. State management. Components examples. Notificaitons. Setup recommendations.
 
 Responsive                     |  Desktop
