@@ -1,7 +1,7 @@
 
 import { FC } from "react";
-import { SignMessage } from '../../components/SignMessage';
-import { SendTransaction } from '../../components/SendTransaction';
+import { SignMessage } from '@/components/SignMessage';
+import { SendTransaction } from '@/components/SendTransaction';
 
 export const BasicsView: FC = ({ }) => {
 

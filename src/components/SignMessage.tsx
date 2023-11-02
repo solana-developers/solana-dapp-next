@@ -3,7 +3,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import bs58 from 'bs58';
 import { FC, useCallback } from 'react';
 import { sign } from 'tweetnacl';
-import { notify } from "../utils/notifications";
+import { notify } from "@/utils/notifications";
 
 export const SignMessage: FC = () => {
     const { publicKey, signMessage } = useWallet();

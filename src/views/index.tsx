@@ -1,2 +1,2 @@
-export { HomeView } from "./home";
-export { BasicsView } from "./basics";
+export { HomeView } from "@/views/home";
+export { BasicsView } from "@/views/basics";

@@ -10,7 +10,7 @@ The Solana dApp Scaffold repos are meant to house good starting scaffolds for ec
 
 Responsive                     |  Desktop
 :-------------------------:|:-------------------------:
-![](scaffold-mobile.png)  |  ![](scaffold-desktop.png)
+![](doc/scaffold-mobile.png)  |  ![](doc/scaffold-desktop.png)
 
 ## Getting Started
 

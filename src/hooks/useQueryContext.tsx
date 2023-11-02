@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { EndpointTypes } from '../models/types'
+import { EndpointTypes } from '@/models/types'
 
 export default function useQueryContext() {
   const router = useRouter()
